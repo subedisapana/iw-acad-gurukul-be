@@ -1,0 +1,8 @@
+#Environment
+Djangoenv/
+
+.idea/
+
+### Django ###
+db.sqlite3
+settings.py
