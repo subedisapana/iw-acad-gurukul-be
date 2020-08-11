@@ -2,7 +2,8 @@
 Djangoenv/
 
 .idea/
+.env
 
 ### Django ###
 db.sqlite3
-settings.py
+
