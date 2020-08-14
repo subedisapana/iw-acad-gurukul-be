@@ -1,10 +1,11 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from gurukul.models import UserInfo
 import cloudinary
 import cloudinary.uploader
 import os
+from django.contrib.auth import authenticate
 
-#User Serializer
+#User Registration
 class UserSerializer(serializers.ModelSerializer): 
 
     confirm_password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -35,3 +36,29 @@ class UserSerializer(serializers.ModelSerializer):
 
         new_account.save()
         return new_account
+
+
+#User Login
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        email = data.get("email", "")
+        password = data.get("password", "")
+
+        print(email, password,'***************')
+
+        if email and password:
+            user = authenticate(email=email, password=password)
+            if user:
+                if user.is_active:
+                    data["user"] = user
+                else:
+                    raise exceptions.ValidationError("User is not active")
+            else:
+                raise exceptions.ValidationError("Credentials did not match")
+        else:
+            raise exceptions.ValidationError("Email and password is required to login")
+        
+        return data
