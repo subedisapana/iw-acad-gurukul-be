@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from gurukul.models import UserInfo
+import cloudinary
+import cloudinary.uploader
+import os
 
 #User Serializer
 class UserSerializer(serializers.ModelSerializer): 
@@ -26,7 +29,9 @@ class UserSerializer(serializers.ModelSerializer):
         if password != confirm_password:
             raise serializers.ValidationError({'password': 'Please enter same password'})
         new_account.set_password(password)
+
+        uploader = cloudinary.uploader.upload(os.path.abspath("gurukul/static/img/default-profile.png"), quality="60")
+        new_account.profile_image_url = uploader['url']
+
         new_account.save()
         return new_account
-
-
