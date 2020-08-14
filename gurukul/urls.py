@@ -6,5 +6,5 @@ from gurukul.views import(
 app_name = "gurukul"
 
 urlpatterns = [
-    path('register', api_user_view)
+    path('register/', api_user_view)
 ]
