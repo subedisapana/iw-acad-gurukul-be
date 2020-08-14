@@ -1,10 +1,10 @@
 from django.urls import path
 from gurukul.views import(
-    api_user_view,
+    UserView,
 )
  
 app_name = "gurukul"
 
 urlpatterns = [
-    path('register/', api_user_view)
+    path('register/', UserView.as_view())
 ]
