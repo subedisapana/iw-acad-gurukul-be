@@ -1,13 +1,17 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from notice.models import Notice
 from notice.serializers import NoticeSerializer
  
 # Create your views here.
 
 class NoticeView(APIView):
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
+
     def get_object(self, pk):
         try:
             return Notice.objects.get(pk=pk)
