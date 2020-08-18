@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from notice.models import Notice
 from notice.serializers import NoticeSerializer
+from django.http import Http404
  
 # Create your views here.
 

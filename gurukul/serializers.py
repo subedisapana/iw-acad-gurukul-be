@@ -37,6 +37,29 @@ class UserSerializer(serializers.ModelSerializer):
         new_account.save()
         return new_account
 
+    def update(self):
+        current_user = UserInfo(
+            first_name = self.validated_data['first_name'],
+            middle_name = self.validated_data['middle_name'],
+            last_name = self.validated_data['last_name'],
+        )
+
+        password = self.validated_data['password']
+        confirm_password = self.validated_data['confirm_password']
+
+        if password != confirm_password:
+            raise serializers.ValidationError({'password': 'Please enter same password'})
+        current_user.set_password(password)
+
+        user_given_path = self.validated_data['profile_image']
+        upload_path = ''
+
+        if user_given_path:
+            upload_path = user_given_path
+        else:
+            upload_path = os.path.abspath("gurukul/static/img/default-profile.png")
+
+        
 
 #User Login
 class LoginSerializer(serializers.Serializer):
