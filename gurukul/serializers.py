@@ -5,6 +5,7 @@ import cloudinary.uploader
 import os
 from django.contrib.auth import authenticate
 
+
 #User Registration
 class UserSerializer(serializers.ModelSerializer): 
 
@@ -14,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = UserInfo
         fields = ['email', 'first_name', 'middle_name', 'last_name', 'password', 'confirm_password']
         extra_kwargs = {
-            'password' : {'write_only': True}
+            'password': {'write_only': True}
         }
 
     def save(self):
@@ -62,3 +63,15 @@ class LoginSerializer(serializers.Serializer):
             raise exceptions.ValidationError("Email and password is required to login")
         
         return data
+
+
+# Request for Password Reset Email
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        fields = ['email']
+
+
+
+
