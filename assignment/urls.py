@@ -1,10 +1,9 @@
-# from django.urls import path
-# from gurukul.views import(
-#     AssignmentView
-# )
- 
-# app_name = "gurukul"
+from django.urls import path
+from assignment.views import AssignmentView
 
-# urlpatterns = [
-#      path('', AssignmentView.as_view()),
-# ]
+ 
+app_name = "assignment"
+
+urlpatterns = [
+     path('', AssignmentView.as_view()),
+]
