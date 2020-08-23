@@ -36,6 +36,17 @@ class UserSerializer(serializers.ModelSerializer):
         new_account.save()
         return new_account
 
+            
+class UserUpdateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=50, required=False)
+    confirm_password = serializers.CharField(max_length=50, required=False)
+    first_name = serializers.CharField(max_length=100)
+    middle_name = serializers.CharField(max_length=100, allow_blank=True)
+    last_name = serializers.CharField(max_length=100)
+    bio = serializers.CharField(max_length=300, allow_blank=True)
+    profile_image_url = serializers.CharField(max_length=300)
+
     def update(self, user):
         current_user = UserInfo(
             email = self.validated_data['email'],
@@ -44,13 +55,6 @@ class UserSerializer(serializers.ModelSerializer):
             last_name = self.validated_data['last_name'],
             bio = self.validated_data['bio'],
         )
-
-        password = self.validated_data['password']
-        confirm_password = self.validated_data['confirm_password']
-
-        if password != confirm_password:
-            raise serializers.ValidationError({'password': 'Please enter same password'})
-        current_user.set_password(password)
 
         profile_image_url = self.validated_data['profile_image_url']
 
@@ -61,7 +65,7 @@ class UserSerializer(serializers.ModelSerializer):
             current_user.profile_image_url = user.profile_image_url
         
         return current_user
-        
+
 
 #User Login
 class LoginSerializer(serializers.Serializer):

@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import Http404
-from gurukul.serializers import UserSerializer, LoginSerializer
+from gurukul.serializers import UserSerializer, LoginSerializer, UserUpdateSerializer
 from rest_framework.views import APIView
 from django.contrib.auth import login
 from rest_framework.authtoken.models import Token
@@ -38,7 +38,7 @@ class UserView(APIView):
 
     def put(self, request, pk, format=None):
         current_user = self.get_object(pk)
-        serializer = UserSerializer(current_user, data=request.data)
+        serializer = UserUpdateSerializer(current_user, data=request.data)
         data = {}
 
         if serializer.is_valid():
