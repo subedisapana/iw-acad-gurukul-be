@@ -54,8 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         profile_image_url = self.validated_data['profile_image_url']
 
-        if profile_image_url != "":
-            import pdb; pdb.set_trace()
+        if profile_image_url != user.profile_image_url:
             uploader = cloudinary.uploader.upload(profile_image_url, quality="60")
             current_user.profile_image_url = uploader['url']
         else:
