@@ -30,6 +30,7 @@ class UserView(APIView):
         user_data['first_name'] = current_user.first_name
         user_data['middle_name'] = current_user.middle_name
         user_data['last_name'] = current_user.last_name
+        user_data['password'] = current_user.password
         user_data['bio'] = current_user.bio
         user_data['profile_image_url'] = current_user.profile_image_url
 
@@ -41,13 +42,15 @@ class UserView(APIView):
         data = {}
 
         if serializer.is_valid():
-            new_account = serializer.save()
+            updated_account = serializer.update(current_user)
             data['response'] = "user edited successfully"
-            data['email'] = new_account.email
-            data['first_name'] = new_account.first_name
-            data['middle_name'] = new_account.middle_name
-            data['last_name'] = new_account.last_name
-            data['profile_image_url'] = new_account.profile_image_url
+            data['email'] = updated_account.email
+            data['first_name'] = updated_account.first_name
+            data['middle_name'] = updated_account.middle_name
+            data['last_name'] = updated_account.last_name
+            data['bio'] = updated_account.bio
+            data['profile_image_url'] = updated_account.profile_image_url
+            
             return Response(data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
