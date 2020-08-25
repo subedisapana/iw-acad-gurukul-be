@@ -56,7 +56,7 @@ class PasswordResetRequest(generics.GenericAPIView):
         if UserInfo.objects.filter(email=email).exists():
             user = UserInfo.objects.get(email=email)
 
-            uidb64 = urlsafe_base64_encode(force_bytes(user.id))
+            uidb64 = force_bytes(urlsafe_base64_encode(user.id))
             token = PasswordResetTokenGenerator().make_token(user)  # for unique token
             current_site = get_current_site(
                 request=request).domain
@@ -89,6 +89,16 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
                 if not PasswordResetTokenGenerator().check_token(user):
                     return Response({'error': 'Token is not valid, please request a new one'},
                                     status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+class SetNewPasswordAPIView(generics.GenericAPIView):
+    serializer_class = SetNewPasswordSerializer
+
+    def patch(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
 
 
 
