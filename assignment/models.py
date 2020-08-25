@@ -9,7 +9,8 @@ class Assignment(models.Model):
     description = models.TextField(max_length=240)
     due_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    resources = models.FileField(upload_to = './uploads', null=True)
+    resource = models.FileField(upload_to = './uploads', null=True)
+    resource_url = models.CharField(max_length=250, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):

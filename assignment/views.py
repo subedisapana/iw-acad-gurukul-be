@@ -6,6 +6,9 @@ from rest_framework.response import Response
 
 # Create your views here.
 class AssignmentView(APIView):
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
+    
     def post(self, request):
         serializer = AssignmentSerializer(data = request.data)
         if serializer.is_valid():

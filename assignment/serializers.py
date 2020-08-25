@@ -19,8 +19,11 @@ class AssignmentSerializer(serializers.ModelSerializer):
                 due_date = self.validated_data['due_date'],
             )
 
-            new_assignment.save()
+            result = cloudinary.uploader.upload(file, 
+                            resource_type = "video")
+            new_assignment.resource_url = result['url']
 
+            new_assignment.save()
             return new_assignment
 
        
