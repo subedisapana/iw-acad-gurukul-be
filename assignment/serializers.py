@@ -8,7 +8,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
     # course = CourseSerializer()
     class Meta:
         model = Assignment
-        fields = ['id', 'title', 'content', 'description', 'course', 'due_date', 'resources']
+        fields = ['id', 'title', 'content', 'description', 'course', 'due_date', 'resource']
 
         def save(self):
             new_assignment = Assignment(
@@ -20,7 +20,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
             )
 
             result = cloudinary.uploader.upload(file, 
-                            resource_type = "video")
+                            resource_type = "raw")
             new_assignment.resource_url = result['url']
 
             new_assignment.save()
