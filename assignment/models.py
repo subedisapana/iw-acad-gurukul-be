@@ -11,7 +11,7 @@ class Assignment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     resource = models.FileField(upload_to = './uploads', null=True)
     resource_url = models.CharField(max_length=250, null=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name = 'assignments', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
