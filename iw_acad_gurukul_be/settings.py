@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'notice',
     'course',
     'assignment',
+    'resources',
 ]
 
 
