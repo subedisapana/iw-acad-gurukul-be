@@ -9,7 +9,6 @@ from rest_framework.authtoken.models import Token
 from .models import UserInfo
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import permission_classes, authentication_classes
 
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -38,12 +37,13 @@ class UserView(APIView):
 
     def put(self, request, pk, format=None):
         current_user = self.get_object(pk)
-        serializer = UserUpdateSerializer(current_user, data=request.data)
-        data = {}
-
+        serializer = UserUpdateSerializer(data=request.data)
+        
         if serializer.is_valid():
             updated_account = serializer.update(current_user)
-            data['response'] = "user edited successfully"
+            data = {}
+
+            data['id'] = updated_account.id
             data['email'] = updated_account.email
             data['first_name'] = updated_account.first_name
             data['middle_name'] = updated_account.middle_name
