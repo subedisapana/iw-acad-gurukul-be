@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'notice',
     'course',
     'resources',
-   
+    'assignment',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
