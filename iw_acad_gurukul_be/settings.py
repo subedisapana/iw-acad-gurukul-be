@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'notice',
     'course',
-   
+    'assignment',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
