@@ -9,10 +9,9 @@ from django.contrib.auth import authenticate
 class UserSerializer(serializers.ModelSerializer): 
 
     confirm_password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
-
     class Meta:
         model = UserInfo
-        fields = ['email', 'first_name', 'middle_name', 'last_name', 'password', 'confirm_password']
+        fields = ['email', 'first_name', 'middle_name', 'last_name', 'password', 'confirm_password', 'profile_image_url', 'bio']
         extra_kwargs = {
             'password' : {'write_only': True}
         }
@@ -22,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
                 email = self.validated_data['email'],
                 first_name = self.validated_data['first_name'],
                 middle_name = self.validated_data['middle_name'],
-                last_name = self.validated_data['last_name'] 
+                last_name = self.validated_data['last_name']
             )
         password = self.validated_data['password']
         confirm_password = self.validated_data['confirm_password']
@@ -36,6 +35,36 @@ class UserSerializer(serializers.ModelSerializer):
 
         new_account.save()
         return new_account
+
+            
+class UserUpdateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=50, required=False)
+    confirm_password = serializers.CharField(max_length=50, required=False)
+    first_name = serializers.CharField(max_length=100)
+    middle_name = serializers.CharField(max_length=100, allow_blank=True)
+    last_name = serializers.CharField(max_length=100)
+    bio = serializers.CharField(max_length=300, allow_blank=True)
+    profile_image_url = serializers.CharField(max_length=300)
+
+    def update(self, user):
+        current_user = UserInfo(
+            email = self.validated_data['email'],
+            first_name = self.validated_data['first_name'],
+            middle_name = self.validated_data['middle_name'],
+            last_name = self.validated_data['last_name'],
+            bio = self.validated_data['bio'],
+        )
+
+        profile_image_url = self.validated_data['profile_image_url']
+
+        if profile_image_url != user.profile_image_url:
+            uploader = cloudinary.uploader.upload(profile_image_url, quality="60")
+            current_user.profile_image_url = uploader['url']
+        else:
+            current_user.profile_image_url = user.profile_image_url
+        
+        return current_user
 
 
 #User Login
@@ -62,3 +91,4 @@ class LoginSerializer(serializers.Serializer):
             raise exceptions.ValidationError("Email and password is required to login")
         
         return data
+    
