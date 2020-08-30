@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 class UserInfo(AbstractUser):
     username = models.CharField(max_length=200, blank=True)
     middle_name = models.CharField(max_length=30, blank=True)
@@ -15,3 +16,10 @@ class UserInfo(AbstractUser):
 
     groups = None
     user_permissions = None
+
+    class Meta:
+        ordering = ['first_name']
+
+    def __str__(self):
+        return self.title
+    
