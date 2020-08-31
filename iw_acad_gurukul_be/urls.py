@@ -23,4 +23,6 @@ urlpatterns = [
     path('assignments/', include('assignment.urls')),
     path('courses/', include('course.urls')),
     path('resources/', include('resources.urls')),
+    path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+
    ]
