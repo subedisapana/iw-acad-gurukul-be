@@ -4,12 +4,6 @@ import cloudinary
 import cloudinary.uploader
 import os
 from django.contrib.auth import authenticate
-from rest_framework import serializers
-from rest_framework.exceptions import AuthenticationFailed
-
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import force_str, smart_bytes, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 
 #User Registration
@@ -42,8 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         new_account.save()
         return new_account
-
-            
+           
 class UserUpdateSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=50, required=False)
@@ -55,23 +48,23 @@ class UserUpdateSerializer(serializers.Serializer):
     profile_image_url = serializers.CharField(max_length=300)
 
     def update(self, user):
-        current_user = UserInfo(
-            email = self.validated_data['email'],
-            first_name = self.validated_data['first_name'],
-            middle_name = self.validated_data['middle_name'],
-            last_name = self.validated_data['last_name'],
-            bio = self.validated_data['bio'],
-        )
+        profile_image_url = user.profile_image_url
 
-        profile_image_url = self.validated_data['profile_image_url']
-
-        if profile_image_url != user.profile_image_url:
+        if profile_image_url != self.validated_data['profile_image_url']:
             uploader = cloudinary.uploader.upload(profile_image_url, quality="60")
-            current_user.profile_image_url = uploader['url']
-        else:
-            current_user.profile_image_url = user.profile_image_url
+            profile_image_url = uploader['url']
+
+        user.email = self.validated_data['email']
+        user.first_name = self.validated_data['first_name']
+        user.middle_name = self.validated_data['middle_name']
+        user.last_name = self.validated_data['last_name']
+        user.bio = self.validated_data['bio']
         
-        return current_user
+        user.profile_image_url = profile_image_url
+
+        user.save()
+        
+        return user
 
 
 #User Login
@@ -100,40 +93,9 @@ class LoginSerializer(serializers.Serializer):
         return data
 
 
-# Request for Password Reset Email
-class PasswordResetRequestSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+class ChangePasswordSerializer(serializers.Serializer):
+    model = UserInfo
 
-    class Meta:
-        fields = ['email']
-
-
-class  SetNewPasswordSerializer(serializers.Serializer):
-
-    password = serializers.CharField(write_only=True)
-    token = serializers.CharField(min_length=1, write_only=True)
-    uidb64 = serializers.CharField(min_length=1, write_only=True)
-
-    class Meta:
-        fields = ['password', 'token', 'uidb64']
-
-    def validate(self, attrs):
-        try:
-            password = attrs.get('password')
-            token = attrs.get('token')
-            uidb64 = attrs.get('uidb64')
-
-            id = force_str(urlsafe_base64_decode(uidb64))
-            user = UserInfo.objects.get(id=id)
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                raise AuthenticationFailed('The reset link is invalid', 401)
-
-            user.set_password(password)
-            user.save()
-
-            return (user)
-        except Exception as e:
-            raise AuthenticationFailed('The reset link is invalid', 401)
-        return super().validate(attrs)
-
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 

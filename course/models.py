@@ -4,7 +4,10 @@ from gurukul.models import UserInfo
 
 class Course(models.Model):
     title = models.CharField(max_length=50)
-    user = models.ManyToManyField(UserInfo, limit_choices_to={'is_staff': True})
+    users = models.ManyToManyField(UserInfo)
+
+    class Meta:
+        ordering = ['title']
 
     def __str__(self):
         return self.title
