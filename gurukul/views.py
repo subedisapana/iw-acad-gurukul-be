@@ -29,7 +29,6 @@ class UserView(APIView):
         user_data['first_name'] = current_user.first_name
         user_data['middle_name'] = current_user.middle_name
         user_data['last_name'] = current_user.last_name
-        user_data['password'] = current_user.password
         user_data['bio'] = current_user.bio
         user_data['profile_image_url'] = current_user.profile_image_url
 
