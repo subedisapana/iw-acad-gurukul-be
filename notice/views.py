@@ -56,3 +56,14 @@ class NoticeView(APIView):
         notice = self.get_object(pk)
         notice.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+        
+class NoticeObjectView(APIView):
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, pk, format=None):
+        notice = Notice.objects.get(pk=pk)
+        serializer = NoticeSerializer(notice)
+
+        return Response(serializer.data)
