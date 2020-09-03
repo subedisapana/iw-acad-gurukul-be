@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'course',
     'assignment',
     'resources',
+    'django_rest_passwordreset',
 ]
 
 
@@ -144,3 +145,11 @@ cloudinary.config(
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+

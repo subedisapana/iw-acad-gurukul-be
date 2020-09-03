@@ -1,14 +1,17 @@
-from django.urls import path
+from django.urls import path, include
 from gurukul.views import(
-    UserView, 
+    UserView,
     UserLoginView,
-    UserRegisterView
+    UserRegisterView,
+    ChangePasswordView
 )
  
 app_name = "gurukul"
 
 urlpatterns = [
-    path('register/', UserRegisterView.as_view()),
+
+     path('register/', UserRegisterView.as_view()),
      path('login/', UserLoginView.as_view()),
      path('<int:pk>/', UserView.as_view()),
-]
+     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+     ]
