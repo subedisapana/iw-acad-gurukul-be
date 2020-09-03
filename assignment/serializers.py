@@ -1,6 +1,6 @@
 from notice.models import Notice
 from rest_framework import serializers, exceptions
-from .models import Assignment
+from .models import Assignment, AssignmentAnswer
 from course.models import Course
 import cloudinary
 import cloudinary.uploader
@@ -42,3 +42,9 @@ class AssignmentSerializer(serializers.ModelSerializer):
         return assignment
 
 
+class AssignmentAnswerSerializer(serializers.ModelSerializer):
+    assignment_id = serializers.IntegerField()
+    user_id = serializers.IntegerField()
+    class Meta:
+        model = AssignmentAnswer
+        fields = ['id', 'answer', 'assignment_id', 'user_id', 'remarks']

@@ -1,5 +1,6 @@
 from django.db import models
 from course.models import Course
+from gurukul.models import UserInfo
 
 # Create your models here.
 
@@ -14,3 +15,13 @@ class Assignment(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class AssignmentAnswer(models.Model):
+    answer = models.TextField()
+    remarks = models.TextField(null=True, blank=True)
+    assignment = models.ForeignKey(Assignment, related_name='assignment_answers', on_delete=models.CASCADE)
+    user = models.ForeignKey(UserInfo,related_name='assignment_answers', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.answer

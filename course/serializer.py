@@ -1,14 +1,21 @@
 from rest_framework import serializers
 from .models import Course
-from assignment.models import Assignment
+from assignment.models import Assignment, AssignmentAnswer
 from resources.models import Resource
 
+class AssignmentAnswerSerializer(serializers.ModelSerializer):
+
+    class Meta: 
+        model = AssignmentAnswer
+        fields = ['id', 'answer', 'user_id', 'remarks']
+
 class AssignmentSerializer(serializers.ModelSerializer):
+    assignment_answers = AssignmentAnswerSerializer(many=True, read_only=True)
     class Meta:
         model = Assignment
-        fields = ['id', 'title', 'description', 'due_date', 'created_at', 'resource_url'] 
+        fields = ['id', 'title', 'description', 'due_date', 'created_at', 'resource_url', 'assignment_answers'] 
 
-class ResoruceSerializer(serializers.ModelSerializer):
+class ResourceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resource
@@ -16,7 +23,8 @@ class ResoruceSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     assignments = AssignmentSerializer(many=True, read_only=True)
-    resources = ResoruceSerializer(many=True, read_only=True)
+    resources = ResourceSerializer(many=True, read_only=True)
     class Meta:
         model = Course
         fields = ['title', 'assignments', 'resources']
+        
