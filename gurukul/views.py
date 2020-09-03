@@ -29,7 +29,6 @@ class UserView(APIView):
         user_data['first_name'] = current_user.first_name
         user_data['middle_name'] = current_user.middle_name
         user_data['last_name'] = current_user.last_name
-        user_data['password'] = current_user.password
         user_data['bio'] = current_user.bio
         user_data['profile_image_url'] = current_user.profile_image_url
 
@@ -86,8 +85,7 @@ class UserLoginView(APIView):
         user = serializer.validated_data["user"]
         login(request, user)
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key}, status=200)
-
+        return Response({"token": token.key, "user_id": user.id, "is_staff": user.is_staff }, status=200)
 
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer

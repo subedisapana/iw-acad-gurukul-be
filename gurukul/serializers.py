@@ -39,8 +39,6 @@ class UserSerializer(serializers.ModelSerializer):
            
 class UserUpdateSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    password = serializers.CharField(max_length=50, required=False)
-    confirm_password = serializers.CharField(max_length=50, required=False)
     first_name = serializers.CharField(max_length=100)
     middle_name = serializers.CharField(max_length=100, allow_blank=True)
     last_name = serializers.CharField(max_length=100)
