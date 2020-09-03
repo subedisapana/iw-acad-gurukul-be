@@ -25,12 +25,6 @@ class NoticeView(APIView):
 
         return Response(serializer.data)
     
-    def get(self, request, pk, format=None):
-        notice = self.get_object(pk)
-        serializer = NoticeSerializer(notice)
-        return Response(serializer.data)
-
-
     def post(self, request, format=None):
         serializer = NoticeSerializer(data=request.data)
 

@@ -24,7 +24,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
 
-ALLOWED_HOSTS = ['https://nscubegurukul.herokuapp.com/']
+ALLOWED_HOSTS = ['https://nscubegurukul.herokuapp.com/', '127.0.0.1']
 
 # Application definition
 
@@ -155,4 +155,4 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
