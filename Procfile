@@ -1,0 +1,1 @@
+ web: gunicorn iw-acad-gurukul-be.wsgi
