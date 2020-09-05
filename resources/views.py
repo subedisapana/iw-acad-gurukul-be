@@ -19,9 +19,9 @@ class ResourceView(APIView):
         except Resource.DoesNotExist:
             raise Http404
     
-    def get(self, request, format=None):
-        resources = Resource.objects.all()
-        serializer = ResourceSerializer(resources, many=True)
+    def get(self, request, pk, format=None):
+        resource = self.get_object(pk)
+        serializer = ResourceSerializer(resource)
 
         return Response(serializer.data)
 

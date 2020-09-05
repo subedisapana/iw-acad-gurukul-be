@@ -20,6 +20,13 @@ class AssignmentView(APIView):
         except Assignment.DoesNotExist:
             raise Http404
 
+    def get(self, request, pk, format=None):
+        assignment = self.get_object(pk)
+        serializer = AssignmentSerializer(assignment)
+        
+        return Response(serializer.data)
+
+
     def post(self, request):
         serializer = AssignmentSerializer(data = request.data)
 
