@@ -26,7 +26,7 @@ class UserInfo(AbstractUser):
         ordering = ['first_name']
 
     def __str__(self):
-        return self.title
+        return self.first_name
 
 
 @receiver(reset_password_token_created)
