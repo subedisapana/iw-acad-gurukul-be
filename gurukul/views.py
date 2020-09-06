@@ -1,13 +1,14 @@
 from django.http import Http404
-from gurukul.serializers import UserSerializer, LoginSerializer, UserUpdateSerializer, ChangePasswordSerializer
+from gurukul.serializers import UserSerializer, LoginSerializer, UserUpdateSerializer, ChangePasswordSerializer, InstructorRequestSerializer
 from rest_framework.views import APIView
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.auth import login
 from rest_framework.authtoken.models import Token
-from .models import UserInfo
+from .models import UserInfo, InstructorRequest
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+
 
 
 class UserView(APIView):
@@ -117,3 +118,22 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class InstructorRequestView(APIView):
+
+    def post(self, request):
+        serializer = InstructorRequestSerializer(data = request.data)
+        if serializer.is_valid():
+            new_request = serializer.save()
+            data = {}
+            data['id'] = new_request.id
+            data['full_name'] = new_request.full_name
+            data['address'] = new_request.address
+            data['resume_url'] = new_request.resume_url
+            data['phone_number'] = new_request.phone_number
+
+            return Response(data, status=status.HTTP_201_CREATED)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

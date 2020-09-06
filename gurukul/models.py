@@ -44,3 +44,13 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         # to:
         [reset_password_token.user.email]
     )
+
+class InstructorRequest(models.Model):
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    address = models.CharField(max_length=300)
+    phone_number = models.CharField(max_length=30)
+    resume_url = models.CharField(max_length=500)
+
+    def __str__(self):
+        self.full_name
