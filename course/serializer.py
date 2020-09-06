@@ -26,5 +26,5 @@ class CourseSerializer(serializers.ModelSerializer):
     resources = ResourceSerializer(many=True, read_only=True)
     class Meta:
         model = Course
-        fields = ['title', 'assignments', 'resources']
+        fields = ['id','title', 'assignments', 'resources']
         
