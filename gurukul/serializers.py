@@ -1,5 +1,5 @@
 from rest_framework import serializers, exceptions
-from gurukul.models import UserInfo
+from gurukul.models import UserInfo, InstructorRequest
 import cloudinary
 import cloudinary.uploader
 import os
@@ -97,3 +97,23 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
+class InstructorRequestSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = InstructorRequest
+        fields = ['id', 'full_name', 'email', 'phone_number', 'address', 'resume_url']
+
+    def save(self):
+        resume_url = self.validated_data['resume_url']
+
+        if resume_url != '':
+            result = cloudinary.uploader.upload(self.validated_data['resume_url'], resource_type = "raw")
+            resume_url = result['url']
+       
+        return InstructorRequest.objects.create(
+            full_name =self.validated_data['full_name'],
+            email= self.validated_data['email'],
+            phone_number=self.validated_data['phone_number'],
+            address=self.validated_data['address'],
+            resume_url= resume_url,
+        )

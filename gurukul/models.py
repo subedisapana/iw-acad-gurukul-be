@@ -49,7 +49,7 @@ class InstructorRequest(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField()
     address = models.CharField(max_length=300)
-    phone_number = models.IntegerField()
+    phone_number = models.CharField(max_length=30)
     resume_url = models.CharField(max_length=500)
 
     def __str__(self):
