@@ -4,43 +4,53 @@ from .models import Assignment, AssignmentAnswer
 from course.models import Course
 import cloudinary
 import cloudinary.uploader
+import os
 
 class AssignmentSerializer(serializers.ModelSerializer):
-    resource_url = serializers.CharField(allow_blank=True)
     course_id = serializers.IntegerField()
     class Meta:
         model = Assignment
-        fields = ['id', 'title', 'description', 'due_date', 'course_id' ,'resource_url',]
+        fields = ['id', 'title', 'description', 'due_date', 'course_id' , 'resource', 'resource_url',]
     
-    def create(self):
-        resource_url = self.validated_data['resource_url']
-
-        if resource_url != '':
-            result = cloudinary.uploader.upload(self.validated_data['resource_url'], resource_type = "raw")
-            resource_url = result['url']
-       
-        return Assignment.objects.create(
+    def save(self):
+        assignment_obj = Assignment(
             title =self.validated_data['title'],
             description = self.validated_data['description'],
             due_date = self.validated_data['due_date'],
             course_id = self.validated_data['course_id'],
-            resource_url= resource_url,
+            resource = self.validated_data['resource'],
         )
+        assignment_obj.save()
+    
+        if assignment_obj.resource != '':
+            result = cloudinary.uploader.upload(assignment_obj.resource, resource_type = "raw")
+            assignment_obj.resource_url = result['url']
+            assignment_obj.save()
+
+        os.remove(assignment_obj.resource.path)
+
+        return assignment_obj
     
     def update(self, assignment):
-        resource_url = assignment.resource_url
-        if resource_url != self.validated_data['resource_url']:
-            result = cloudinary.uploader.upload(self.validated_data['resource_url'], resource_type = "raw")
-            resource_url = result['url']
+
+        if self.validated_data['resource'] != assignment.resource:
+            cloudinary.uploader.destroy(assignment.resource_url)
+            assignment.resource = self.validated_data['resource']
+            assignment.save()
+            assignment_upload = cloudinary.uploader.upload(assignment.resource, resource_type = "raw")
+            assignment.resource_url = assignment_upload['url']
+            assignment.save()
+            os.remove(assignment.resource.path)
 
         assignment.title = self.validated_data['title']
         assignment.description = self.validated_data['description']
-        assignment.due_date=self.validated_data['due_date']
-        assignment.resource_url = resource_url
         assignment.course_id = self.validated_data['course_id']
-        assignment.save()
-        return assignment
+        assignment.due_date = self.validated_data['due_date']
 
+        assignment.save()
+        
+        return assignment
+       
 
 class AssignmentAnswerSerializer(serializers.ModelSerializer):
     assignment_id = serializers.IntegerField()

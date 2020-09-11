@@ -19,8 +19,8 @@ class UserInfo(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
 
-    groups = None
-    user_permissions = None
+    # groups = None
+    # user_permissions = None
 
     class Meta:
         ordering = ['first_name']

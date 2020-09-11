@@ -31,13 +31,16 @@ class AssignmentView(APIView):
         serializer = AssignmentSerializer(data = request.data)
 
         if serializer.is_valid():
-            new_assignment = serializer.create()
+            new_assignment = serializer.save()
+            assignment_abs_path = new_assignment.resource.path
+            assignment_rel_path = "/" + assignment_abs_path[assignment_abs_path.find('assignments'):]
             data = {}
 
             data['id'] = new_assignment.id
             data['title'] = new_assignment.title
             data['description'] = new_assignment.description
             data['due_date'] = new_assignment.due_date
+            data['resource'] = assignment_rel_path
             data['resource_url'] = new_assignment.resource_url
 
             return Response(data, status=status.HTTP_201_CREATED)
@@ -49,6 +52,8 @@ class AssignmentView(APIView):
 
         if serializer.is_valid():
             updated_assignment = serializer.update(assignment)
+            assignment_abs_path = updated_assignment.resource.path
+            assignment_rel_path = "/" + assignment_abs_path[assignment_abs_path.find('assignments'):]
 
             updated_data = {}
 
@@ -56,6 +61,7 @@ class AssignmentView(APIView):
             updated_data['title'] = updated_assignment.title
             updated_data['description'] = updated_assignment.description
             updated_data['due_date'] = updated_assignment.due_date
+            updated_data['resource'] = assignment_rel_path
             updated_data['resource_url'] = updated_assignment.resource_url
             
             return Response(updated_data, status=status.HTTP_200_OK)
