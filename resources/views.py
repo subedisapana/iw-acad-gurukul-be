@@ -29,13 +29,16 @@ class ResourceView(APIView):
         serializer = ResourceSerializer(data=request.data)
 
         if serializer.is_valid():
-            new_resource =  serializer.create()
+            new_resource = serializer.save()
+            resource_abs_path = new_resource.content.path
+            resource_rel_path = "/" + resource_abs_path[resource_abs_path.find('resources'):]
 
             data = {}
             data['id'] = new_resource.id
             data['title'] = new_resource.title
             data['description'] = new_resource.description
-            data['resource_url'] = new_resource.resource_url
+            data['content'] = resource_rel_path
+            data['content_url'] = new_resource.content_url
             data['course_id'] = new_resource.course_id
 
             return Response(data, status=status.HTTP_201_CREATED)
@@ -48,13 +51,18 @@ class ResourceView(APIView):
 
         if serializer.is_valid():
             updated_resource = serializer.update(resource)
+
+            content_abs_path = updated_resource.content.path
+            content_rel_path = content_abs_path[content_abs_path.find('resources'):]
+            
             updated_data = {}
 
             updated_data['id'] = updated_resource.id
             updated_data['title'] = updated_resource.title
             updated_data['description'] = updated_resource.description
             updated_data['course_id'] = updated_resource.course_id
-            updated_data['resource_url'] = updated_resource.resource_url
+            updated_data['content'] = content_rel_path
+            updated_data['content_url'] = updated_resource.content_url
             
             return Response(updated_data)
 
