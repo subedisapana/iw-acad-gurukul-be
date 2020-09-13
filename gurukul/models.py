@@ -50,7 +50,9 @@ class InstructorRequest(models.Model):
     email = models.EmailField()
     address = models.CharField(max_length=300)
     phone_number = models.CharField(max_length=30)
-    resume_url = models.CharField(max_length=500)
+    resume = models.FileField(upload_to='gurukul/instructor_request/', null=True)
+    resume_url = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
-        self.full_name
+       return self.full_name
+       

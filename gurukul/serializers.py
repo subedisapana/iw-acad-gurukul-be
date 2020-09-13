@@ -101,19 +101,24 @@ class InstructorRequestSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = InstructorRequest
-        fields = ['id', 'full_name', 'email', 'phone_number', 'address', 'resume_url']
+        fields = ['id', 'full_name', 'email', 'phone_number', 'address', 'resume_url', 'resume']
 
     def save(self):
-        resume_url = self.validated_data['resume_url']
-
-        if resume_url != '':
-            result = cloudinary.uploader.upload(self.validated_data['resume_url'], resource_type = "raw")
-            resume_url = result['url']
-       
-        return InstructorRequest.objects.create(
-            full_name =self.validated_data['full_name'],
-            email= self.validated_data['email'],
-            phone_number=self.validated_data['phone_number'],
-            address=self.validated_data['address'],
-            resume_url= resume_url,
+        instructor_request_obj = InstructorRequest(
+            full_name = self.validated_data['full_name'],
+            email = self.validated_data['email'],
+            phone_number = self.validated_data['phone_number'],
+            address = self.validated_data['address'],
+            resume = self.validated_data['resume'] ,
         )
+        instructor_request_obj.save()
+    
+        if instructor_request_obj.resume != '':
+            result = cloudinary.uploader.upload(instructor_request_obj.resume, resource_type = "raw")
+            instructor_request_obj.resume_url = result['url']
+            instructor_request_obj.save()
+
+        os.remove(instructor_request_obj.resume.path)
+
+        return instructor_request_obj
+       
