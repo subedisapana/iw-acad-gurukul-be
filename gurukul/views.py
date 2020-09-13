@@ -125,15 +125,18 @@ class InstructorRequestView(APIView):
         serializer = InstructorRequestSerializer(data = request.data)
         if serializer.is_valid():
             new_request = serializer.save()
+            instructor_request_abs_path = new_request.resume.path
+            instructor_request_rel_path = "/" + instructor_request_abs_path[instructor_request_abs_path.find('instructor_request'):]
+
             data = {}
             data['id'] = new_request.id
             data['full_name'] = new_request.full_name
             data['address'] = new_request.address
+            data['resume'] = instructor_request_rel_path
             data['resume_url'] = new_request.resume_url
             data['phone_number'] = new_request.phone_number
 
             return Response(data, status=status.HTTP_201_CREATED)
-
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
